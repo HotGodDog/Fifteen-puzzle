@@ -78,3 +78,73 @@ int Board::getTile(int row, int col) const {
 pair<int, int> Board::getBlank() const {
     return {blankR, blankC};
 }
+
+bool Board::isSolvable() const {
+    // counting inversions N (0 is skipped)
+    int inversions = 0;
+    vector<int> flat;
+    for (int row = 0; row < SIZE; ++row) {
+        for (int col = 0; col < SIZE; ++col) {
+            if (tiles[row][col] != 0) {
+                flat.push_back(tiles[row][col]);
+            }
+        }
+    }
+    for (size_t i = 0; i < flat.size(); ++i) {
+        for (size_t j = i + 1; j < flat.size(); ++j) {
+            if (flat[i] > flat[j]) {
+                ++inversions;
+            }
+        }
+    }
+
+    // row number of an empty cell counting from the buttom: R in (1, 2, 3, 4)
+    int R = SIZE - blankR;
+
+    // a position is solvable if (N + R) % 2 == 1
+    return (inversions + R) % 2 == 1;
+}
+
+void Board::shuffle() {
+    // create an array [0, 1, 2, ..., 15]
+    vector<int> nums(SIZE * SIZE);
+    for (int i = 0; i < SIZE * SIZE; ++i) {
+        nums[i] = i;
+    }
+
+    // shuffling
+    random_device rd;
+    mt19937 gen(rd());
+    std::shuffle(nums.begin(), nums.end(), gen);
+
+    // write in tiles, find an empty cell
+    int idx = 0;
+    for (int row = 0; row < SIZE; ++row) {
+        for (int col = 0; col < SIZE; ++col) {
+            tiles[row][col] = nums[idx++];
+            if (tiles[row][col] == 0) {
+                blankR = row;
+                blankC = col;
+            }
+        }
+    }
+
+    // if it is not solvable, we change 2 non-zero cells
+    if (!isSolvable()) {
+        // search for the first 2 non-zero cells
+        int r1 = -1, c1 = -1, r2 = -1, c2 = -1;
+        for (int row = 0; row < SIZE && r2 == -1; ++row) {
+            for (int col = 0; col < SIZE && r2 == -1; ++col) {
+                if (tiles[row][col] != 0) {
+                    if (r1 == -1) {
+                        r1 = row; c1 = col;
+                    }
+                    else {
+                        r2 = row; c2 = col;
+                    }
+                }
+            }
+        }
+        swap(tiles[r1][c1], tiles[r2][c2]);
+    }
+}
