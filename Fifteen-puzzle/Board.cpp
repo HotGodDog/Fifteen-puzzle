@@ -40,3 +40,41 @@ bool Board::isSolved() const {
     }
     return true;
 }
+
+bool Board::isValidMove(int dr, int dc) const {
+    int newR = blankR + dr;
+    int newC = blankC + dc;
+    return (newR >= 0 && newR < SIZE && newC >= 0 && newC < SIZE);
+}
+
+bool Board::moveByDelta(int dr, int dc) {
+    if (!isValidMove(dr, dc)) {
+        return false;
+    }
+    int newR = blankR + dr;
+    int newC = blankC + dc;
+    swap(tiles[blankR][blankC], tiles[newR][newC]);
+    blankR = newR;
+    blankC = newC;
+    return true;
+}
+
+bool Board::move(int key) {
+    int dr = 0, dc = 0;
+    switch (key) {
+        case 75: dc = -1; break;    // left
+        case 77: dc =  1; break;    // right
+        case 72: dr = -1; break;    // up
+        case 80: dr =  1; break;    // down
+        default: return false;
+    }
+    return moveByDelta(dr, dc);
+}
+
+int Board::getTile(int row, int col) const {
+    return tiles[row][col];
+}
+
+pair<int, int> Board::getBlank() const {
+    return {blankR, blankC};
+}
