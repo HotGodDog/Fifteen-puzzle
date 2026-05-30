@@ -1,19 +1,19 @@
-#include "board.h"
+#include "Board.h"
 
 Board::Board() {
-    for (int row = 0; row < SIZE; ++row) {
-        for (int col = 0; col < SIZE; ++col) {
-            tiles[row][col] = row * SIZE + col + 1;
+    for (int row = 0; row < BOARD_SIZE; ++row) {
+        for (int col = 0; col < BOARD_SIZE; ++col) {
+            tiles[row][col] = row * BOARD_SIZE + col + 1;
         }
     }
-    tiles[SIZE - 1][SIZE - 1] = 0;
-    blankR = SIZE - 1;
-    blankC = SIZE - 1;
+    tiles[BOARD_SIZE - 1][BOARD_SIZE - 1] = 0;
+    blankR = BOARD_SIZE - 1;
+    blankC = BOARD_SIZE - 1;
 }
 
 void Board::print() const {
-    for (int row = 0; row < SIZE; ++row) {
-        for (int col = 0; col < SIZE; ++col) {
+    for (int row = 0; row < BOARD_SIZE; ++row) {
+        for (int col = 0; col < BOARD_SIZE; ++col) {
             if (tiles[row][col] == 0) {
                 cout << "   _";
             }
@@ -27,10 +27,10 @@ void Board::print() const {
 }
 
 bool Board::isSolved() const {
-    for (int row = 0; row < SIZE; ++row) {
-        for (int col = 0; col < SIZE; ++col) {
-            int expected = row * SIZE + col + 1;
-            if (row == SIZE - 1 && col == SIZE - 1) {
+    for (int row = 0; row < BOARD_SIZE; ++row) {
+        for (int col = 0; col < BOARD_SIZE; ++col) {
+            int expected = row * BOARD_SIZE + col + 1;
+            if (row == BOARD_SIZE - 1 && col == BOARD_SIZE - 1) {
                 expected = 0;
             }
             if (tiles[row][col] != expected) {
@@ -44,7 +44,7 @@ bool Board::isSolved() const {
 bool Board::isValidMove(int dr, int dc) const {
     int newR = blankR + dr;
     int newC = blankC + dc;
-    return (newR >= 0 && newR < SIZE && newC >= 0 && newC < SIZE);
+    return (newR >= 0 && newR < BOARD_SIZE && newC >= 0 && newC < BOARD_SIZE);
 }
 
 bool Board::moveByDelta(int dr, int dc) {
@@ -83,8 +83,8 @@ bool Board::isSolvable() const {
     // counting inversions N (0 is skipped)
     int inversions = 0;
     vector<int> flat;
-    for (int row = 0; row < SIZE; ++row) {
-        for (int col = 0; col < SIZE; ++col) {
+    for (int row = 0; row < BOARD_SIZE; ++row) {
+        for (int col = 0; col < BOARD_SIZE; ++col) {
             if (tiles[row][col] != 0) {
                 flat.push_back(tiles[row][col]);
             }
@@ -99,7 +99,7 @@ bool Board::isSolvable() const {
     }
 
     // row number of an empty cell counting from the buttom: R in (1, 2, 3, 4)
-    int R = SIZE - blankR;
+    int R = BOARD_SIZE - blankR;
 
     // a position is solvable if (N + R) % 2 == 1
     return (inversions + R) % 2 == 1;
@@ -107,8 +107,8 @@ bool Board::isSolvable() const {
 
 void Board::shuffle() {
     // create an array [0, 1, 2, ..., 15]
-    vector<int> nums(SIZE * SIZE);
-    for (int i = 0; i < SIZE * SIZE; ++i) {
+    vector<int> nums(BOARD_SIZE * BOARD_SIZE);
+    for (int i = 0; i < BOARD_SIZE * BOARD_SIZE; ++i) {
         nums[i] = i;
     }
 
@@ -119,8 +119,8 @@ void Board::shuffle() {
 
     // write in tiles, find an empty cell
     int idx = 0;
-    for (int row = 0; row < SIZE; ++row) {
-        for (int col = 0; col < SIZE; ++col) {
+    for (int row = 0; row < BOARD_SIZE; ++row) {
+        for (int col = 0; col < BOARD_SIZE; ++col) {
             tiles[row][col] = nums[idx++];
             if (tiles[row][col] == 0) {
                 blankR = row;
@@ -133,8 +133,8 @@ void Board::shuffle() {
     if (!isSolvable()) {
         // search for the first 2 non-zero cells
         int r1 = -1, c1 = -1, r2 = -1, c2 = -1;
-        for (int row = 0; row < SIZE && r2 == -1; ++row) {
-            for (int col = 0; col < SIZE && r2 == -1; ++col) {
+        for (int row = 0; row < BOARD_SIZE && r2 == -1; ++row) {
+            for (int col = 0; col < BOARD_SIZE && r2 == -1; ++col) {
                 if (tiles[row][col] != 0) {
                     if (r1 == -1) {
                         r1 = row; c1 = col;

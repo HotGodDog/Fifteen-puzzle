@@ -4,10 +4,11 @@
 #include <array>
 #include <algorithm>
 #include <random>
+#include <vector>
 
 using namespace std;
 
-const int SIZE = 4;
+const int BOARD_SIZE = 4;
 
 class Board {
 public:
@@ -25,7 +26,7 @@ public:
     void shuffle();         // random start position
 
 private:
-    array<array<int, SIZE>, SIZE> tiles;
+    array<array<int, BOARD_SIZE>, BOARD_SIZE> tiles;
     int blankR, blankC;             // coordinates of an empty cell
     bool isSolvable() const;        // checking the possibility of a solution
 };
