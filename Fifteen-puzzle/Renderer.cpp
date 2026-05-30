@@ -48,7 +48,7 @@ void Renderer::drawHistory(const History& history, int page) {
     int totalPages = history.totalPages(HISTORY_PER_PAGE);
     if (totalPages < 1) totalPages = 1;
 
-    cout << "\nHistory (page " << page << "/" << totalPages << ", PgUp/PgDn):" << endl;
+    cout << "\nHistory (page " << page << "/" << totalPages << "):" << endl;
 
     auto moves = history.getPage(page, HISTORY_PER_PAGE);
     if (moves.empty()) {
@@ -58,7 +58,7 @@ void Renderer::drawHistory(const History& history, int page) {
 
     for (const auto& rec : moves) {
         if (rec.isAuto) {
-            setColor(8);    // gray for auto moves
+            setColor(8);  // gray for auto
         }
         cout << " " << rec.number << ". Tile " << rec.tile;
         if (rec.tile < 10) cout << " ";
@@ -66,6 +66,9 @@ void Renderer::drawHistory(const History& history, int page) {
             << " [" << rec.toR << "," << rec.toC << "]";
         if (rec.isAuto) {
             cout << " [auto]";
+        }
+        else {
+            cout << " [player]";
         }
         resetColor();
         cout << endl;
@@ -76,19 +79,19 @@ void Renderer::drawFooter() {
     cout << "\n[h] - auto-solve  [arrows] - move  [n] - new game  [PgUp/PgDn] - history" << endl;
 }
 
-void Renderer::draw(const Board& board, const History& history, int historyPage) {
+void Renderer::draw(const Board& board, const History& history, int historyPage, bool winShown) {
     clearScreen();
     drawBoard(board);
     drawHistory(history, historyPage);
-    drawFooter();
-}
 
-void Renderer::showWin(int userMoves, int autoMoves, int totalMoves) {
-    setColor(14);   // yellow
-    cout << "\n*** YOU WIN! ***" << endl;
-    resetColor();
-    cout << "User moves: " << userMoves << endl;
-    cout << "Auto moves: " << autoMoves << endl;
-    cout << "Total moves: " << totalMoves << endl;
-    cout << "Press any key to continue..." << endl;
+    if (winShown) {
+        setColor(14);
+        cout << "\n*** YOU WIN! ***" << endl;
+        resetColor();
+        cout << "User moves: " << history.countUser() << endl;
+        cout << "Auto moves: " << history.countAuto() << endl;
+        cout << "Total moves: " << history.size() << endl;
+    }
+
+    drawFooter();
 }

@@ -8,8 +8,7 @@ using namespace std;
 
 class Renderer {
 public:
-    void draw(const Board& board, const History& history, int historyPage);
-    void showWin(int userMoves, int autoMoves, int totalMoves);
+    void draw(const Board& board, const History& history, int historyPage, bool winShown = false);
     void clearScreen();
 
 private:

@@ -17,6 +17,9 @@ private:
     Solver solver;
     bool demoMode;
     int historyPage;
+    bool winShown;
+    vector<pair<int, int>> demoPath;
+    size_t demoPathIndex;
 
     void newGame();
     void processInput();

@@ -2,7 +2,7 @@
 #include <conio.h>
 #include <windows.h>
 
-Game::Game() : demoMode(false), historyPage(1) {
+Game::Game() : demoMode(false), historyPage(1), demoPathIndex(0), winShown(false) {
     newGame();
 }
 
@@ -11,6 +11,9 @@ void Game::newGame() {
     history.clear();
     historyPage = 1;
     demoMode = false;
+    demoPath.clear();       // reset path
+    demoPathIndex = 0;      // reset index
+    winShown = false;       // reset win window
 }
 
 char Game::deltaToArrow(int dr, int dc) const {
@@ -65,8 +68,10 @@ void Game::processInput() {
     switch (key) {
     case 'h':
     case 'H':
-        demoMode = !demoMode;
-        break;
+        if (!demoMode) {
+            demoMode = true;
+        }
+    break;
     case 'n':
     case 'N':
         newGame();
@@ -75,35 +80,34 @@ void Game::processInput() {
 }
 
 bool Game::demoStep() {
-    static vector<pair<int, int>> path;
-    static size_t pathIndex;
-
-    if (path.empty()) {
+    if (demoPath.empty()) {
         renderer.clearScreen();
         cout << "Solving puzzle, please wait..." << endl;
-        cout << "This may take a few seconds..." << endl;
 
-        path = solver.solve(board);
-        pathIndex = 0;
+        demoPath = solver.solve(board);
+        demoPathIndex = 0;
 
-        if (path.empty()) {
-            cout << "No solution found (should not happen)!" << endl;
-            Sleep(2000);
+        if (demoPath.empty()) {
+            cout << "Already solved or no solution!" << endl;
+            Sleep(1000);
+            demoMode = false;
             return false;
         }
 
-        cout << "Solution found: " << path.size() << " moves" << endl;
-        Sleep(1000);
+        cout << "Solution found: " << demoPath.size() << " moves" << endl;
+        Sleep(500);
     }
 
-    if (pathIndex >= path.size()) {
-        path.clear();
+    if (demoPathIndex >= demoPath.size()) {
+        demoPath.clear();
+        demoPathIndex = 0;
+        demoMode = false;
         return false;
     }
 
-    int dr = path[pathIndex].first;
-    int dc = path[pathIndex].second;
-    pathIndex++;
+    int dr = demoPath[demoPathIndex].first;
+    int dc = demoPath[demoPathIndex].second;
+    demoPathIndex++;
 
     int oldBlankR = board.getBlank().first;
     int oldBlankC = board.getBlank().second;
@@ -123,20 +127,14 @@ bool Game::demoStep() {
 
 void Game::run() {
     while (true) {
-        if (board.isSolved()) {
-            renderer.draw(board, history, historyPage);
-            renderer.showWin(history.countUser(), history.countAuto(), history.size());
-            _getch();
-            newGame();
-            continue;
+        if (board.isSolved() && !winShown && history.size() > 0) {
+            winShown = true;
         }
 
-        renderer.draw(board, history, historyPage);
+        renderer.draw(board, history, historyPage, winShown);
 
         if (demoMode) {
-            if (!demoStep()) {
-                demoMode = false;
-            }
+            if (!demoStep()) {}
             Sleep(200);
         }
         else {
