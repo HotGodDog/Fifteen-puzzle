@@ -75,9 +75,50 @@ void Game::processInput() {
 }
 
 bool Game::demoStep() {
-    // Placeholder - solver not yet implemented
-    // Will be filled in Step 6
-    return false;
+    static vector<pair<int, int>> path;
+    static size_t pathIndex;
+
+    if (path.empty()) {
+        renderer.clearScreen();
+        cout << "Solving puzzle, please wait..." << endl;
+        cout << "This may take a few seconds..." << endl;
+
+        path = solver.solve(board);
+        pathIndex = 0;
+
+        if (path.empty()) {
+            cout << "No solution found (should not happen)!" << endl;
+            Sleep(2000);
+            return false;
+        }
+
+        cout << "Solution found: " << path.size() << " moves" << endl;
+        Sleep(1000);
+    }
+
+    if (pathIndex >= path.size()) {
+        path.clear();
+        return false;
+    }
+
+    int dr = path[pathIndex].first;
+    int dc = path[pathIndex].second;
+    pathIndex++;
+
+    int oldBlankR = board.getBlank().first;
+    int oldBlankC = board.getBlank().second;
+
+    board.moveByDelta(dr, dc);
+
+    auto newBlank = board.getBlank();
+    int newBlankR = newBlank.first;
+    int newBlankC = newBlank.second;
+    int tile = board.getTile(oldBlankR, oldBlankC);
+    char arrow = deltaToArrow(dr, dc);
+
+    history.add(tile, oldBlankR, oldBlankC, newBlankR, newBlankC, arrow, true);
+
+    return true;
 }
 
 void Game::run() {

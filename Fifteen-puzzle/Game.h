@@ -3,6 +3,7 @@
 #include "Board.h"
 #include "History.h"
 #include "Renderer.h"
+#include "Solver.h"
 
 class Game {
 public:
@@ -13,6 +14,7 @@ private:
     Board board;
     History history;
     Renderer renderer;
+    Solver solver;
     bool demoMode;
     int historyPage;
 
