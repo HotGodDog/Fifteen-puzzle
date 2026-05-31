@@ -1,4 +1,5 @@
 #include "History.h"
+#include <algorithm>
 
 void History::add(int tile, int fromR, int fromC, int toR, int toC, char arrow, bool isAuto) {
     MoveRecord rec;

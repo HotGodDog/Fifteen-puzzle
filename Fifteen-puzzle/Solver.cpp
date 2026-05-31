@@ -74,7 +74,7 @@ bool Solver::isSolved(const State& state) const {
 
 bool Solver::search(State& state, int g, int bound, int blankR, int blankC,
     int& newBound, vector<pair<int, int>>& path,
-    pair<int, int> lastMove) {
+    pair<int, int> lastMove, bool hasLast) {
 
     int f = g + heuristic(state);
     if (f > bound) {
@@ -93,12 +93,12 @@ bool Solver::search(State& state, int g, int bound, int blankR, int blankC,
         if (newR < 0 || newR >= BOARD_SIZE || newC < 0 || newC >= BOARD_SIZE) continue;
 
         // Don't undo last move
-        if (lastMove.first == -drs[i] && lastMove.second == -dcs[i]) continue;
+        if (hasLast && lastMove.first == -drs[i] && lastMove.second == -dcs[i]) continue;
 
         swap(state[blankR][blankC], state[newR][newC]);
         path.push_back({ drs[i], dcs[i] });
 
-        if (search(state, g + 1, bound, newR, newC, newBound, path, { drs[i], dcs[i] })) {
+        if (search(state, g + 1, bound, newR, newC, newBound, path, { drs[i], dcs[i] }, true)) {
             return true;
         }
 
@@ -130,7 +130,7 @@ vector<pair<int, int>> Solver::solve(const Board& start) {
 
     while (true) {
         int newBound = INT_MAX;
-        if (search(state, 0, bound, blankR, blankC, newBound, path, { 0, 0 })) {
+        if (search(state, 0, bound, blankR, blankC, newBound, path, { 0, 0 }, false)) {
             return path;
         }
         if (newBound == INT_MAX) return {}; // no solution

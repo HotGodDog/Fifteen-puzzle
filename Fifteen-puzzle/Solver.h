@@ -18,7 +18,7 @@ private:
     // IDA* recursive search
     bool search(State& state, int g, int bound, int blankR, int blankC,
         int& newBound, vector<pair<int, int>>& path,
-        pair<int, int> lastMove);
+        pair<int, int> lastMove, bool hasLast);
 
     bool isSolved(const State& state) const;
 };

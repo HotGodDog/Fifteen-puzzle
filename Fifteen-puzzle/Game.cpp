@@ -71,7 +71,7 @@ void Game::processInput() {
         if (!demoMode) {
             demoMode = true;
         }
-    break;
+        break;
     case 'n':
     case 'N':
         newGame();
@@ -81,8 +81,7 @@ void Game::processInput() {
 
 bool Game::demoStep() {
     if (demoPath.empty()) {
-        renderer.clearScreen();
-        cout << "Solving puzzle, please wait..." << endl;
+        cout << "\nSolving puzzle, please wait..." << endl;
 
         demoPath = solver.solve(board);
         demoPathIndex = 0;
@@ -135,7 +134,7 @@ void Game::run() {
 
         if (demoMode) {
             if (!demoStep()) {}
-            Sleep(200);
+            Sleep(300);
         }
         else {
             processInput();

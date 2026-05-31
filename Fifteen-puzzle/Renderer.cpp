@@ -27,12 +27,15 @@ void Renderer::drawBoard(const Board& board) {
                 cout << "|";
             }
             else {
-                if (tile == r * BOARD_SIZE + c + 1) {
-                    setColor(10);   // green if in correct position
+                bool correct = (tile == r * BOARD_SIZE + c + 1);    // correct position flag
+                if (correct) {
+                    setColor(10);
                 }
                 if (tile < 10) cout << " ";
                 cout << " " << tile << " ";
-                resetColor();
+                if (correct) {
+                    resetColor();
+                }
                 cout << "|";
             }
         }
