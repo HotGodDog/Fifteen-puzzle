@@ -81,8 +81,10 @@ bool Solver::search(State& state, int g, int bound, int blankR, int blankC,
         newBound = min(newBound, f);
         return false;
     }
+
     if (isSolved(state)) return true;
 
+    // go through 4 directions
     const int drs[4] = { -1, 1, 0, 0 };
     const int dcs[4] = { 0, 0, -1, 1 };
 
@@ -90,13 +92,14 @@ bool Solver::search(State& state, int g, int bound, int blankR, int blankC,
         int newR = blankR + drs[i];
         int newC = blankC + dcs[i];
 
+        // check the exit from the borders
         if (newR < 0 || newR >= BOARD_SIZE || newC < 0 || newC >= BOARD_SIZE) continue;
 
         // Don't undo last move
         if (hasLast && lastMove.first == -drs[i] && lastMove.second == -dcs[i]) continue;
 
-        swap(state[blankR][blankC], state[newR][newC]);
-        path.push_back({ drs[i], dcs[i] });
+        swap(state[blankR][blankC], state[newR][newC]); // move the tile
+        path.push_back({ drs[i], dcs[i] });             // remember the move
 
         if (search(state, g + 1, bound, newR, newC, newBound, path, { drs[i], dcs[i] }, true)) {
             return true;
@@ -112,21 +115,21 @@ bool Solver::search(State& state, int g, int bound, int blankR, int blankC,
 vector<pair<int, int>> Solver::solve(const Board& start) {
     if (start.isSolved()) return {};
 
+    // copying the state of the board (array<<array<int,4>,4>)
     State state;
     int blankR = 0, blankC = 0;
-
-    for (int r = 0; r < BOARD_SIZE; ++r) {
-        for (int c = 0; c < BOARD_SIZE; ++c) {
-            state[r][c] = start.getTile(r, c);
-            if (state[r][c] == 0) {
-                blankR = r;
-                blankC = c;
+    for (int row = 0; row < BOARD_SIZE; ++row) {
+        for (int col = 0; col < BOARD_SIZE; ++col) {
+            state[row][col] = start.getTile(row, col);
+            if (state[row][col] == 0) {
+                blankR = row;
+                blankC = col;
             }
         }
     }
 
-    int bound = heuristic(state);
-    vector<pair<int, int>> path;
+    int bound = heuristic(state);   // set the initial depth
+    vector<pair<int, int>> path;    // the path for recording moves
 
     while (true) {
         int newBound = INT_MAX;
