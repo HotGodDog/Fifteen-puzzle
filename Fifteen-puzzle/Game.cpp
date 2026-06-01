@@ -2,26 +2,16 @@
 #include <conio.h>
 #include <windows.h>
 
-Game::Game() : demoMode(false), historyPage(1), demoPathIndex(0), winShown(false) {
+Game::Game() : demoMode(false), demoPathIndex(0), winShown(false) {
     newGame();
 }
 
 void Game::newGame() {
     board.shuffle();
-    history.clear();
-    historyPage = 1;
     demoMode = false;
     demoPath.clear();       // reset path
     demoPathIndex = 0;      // reset index
     winShown = false;       // reset win window
-}
-
-char Game::deltaToArrow(int dr, int dc) const {
-    if (dr == -1 && dc == 0) return '\x18';  // ↑
-    if (dr == 1 && dc == 0) return '\x19';   // ↓
-    if (dr == 0 && dc == -1) return '\x1B';  // ←
-    if (dr == 0 && dc == 1) return '\x1A';   // →
-    return '?';
 }
 
 void Game::processInput() {
@@ -35,30 +25,9 @@ void Game::processInput() {
         case 80:    // down
         case 75:    // left
         case 77:    // right
-            if (!demoMode && board.move(key)) {
-                auto blankPos = board.getBlank();
-                int newR = blankPos.first;
-                int newC = blankPos.second;
-                int dr = 0, dc = 0;
-                if (key == 72) dr = -1;
-                else if (key == 80) dr = 1;
-                else if (key == 75) dc = -1;
-                else if (key == 77) dc = 1;
-
-                int oldR = newR - dr;
-                int oldC = newC - dc;
-                int tile = board.getTile(oldR, oldC);
-                char arrow = deltaToArrow(dr, dc);
-
-                history.add(tile, oldR, oldC, newR, newC, arrow, false);
-                historyPage = 1;
+            if (!demoMode) {
+                board.move(key);
             }
-            break;
-        case 73: // PgUp
-            if (historyPage < history.totalPages(4)) historyPage++;
-            break;
-        case 81: // PgDn
-            if (historyPage > 1) historyPage--;
             break;
         }
         return;
@@ -80,6 +49,13 @@ void Game::processInput() {
 }
 
 bool Game::demoStep() {
+    if (board.isSolved()) {     // protection against repeated calls
+        demoPath.clear();
+        demoPathIndex = 0;
+        demoMode = false;
+        return false;
+    }
+
     if (demoPath.empty()) {
         cout << "\nSolving puzzle, please wait..." << endl;
 
@@ -94,7 +70,8 @@ bool Game::demoStep() {
         }
 
         cout << "Solution found: " << demoPath.size() << " moves" << endl;
-        Sleep(500);
+        cout << "Press any key to start";
+        _getch();
     }
 
     if (demoPathIndex >= demoPath.size()) {
@@ -108,29 +85,25 @@ bool Game::demoStep() {
     int dc = demoPath[demoPathIndex].second;
     demoPathIndex++;
 
-    int oldBlankR = board.getBlank().first;
-    int oldBlankC = board.getBlank().second;
-
     board.moveByDelta(dr, dc);
-
-    auto newBlank = board.getBlank();
-    int newBlankR = newBlank.first;
-    int newBlankC = newBlank.second;
-    int tile = board.getTile(oldBlankR, oldBlankC);
-    char arrow = deltaToArrow(dr, dc);
-
-    history.add(tile, oldBlankR, oldBlankC, newBlankR, newBlankC, arrow, true);
 
     return true;
 }
 
 void Game::run() {
     while (true) {
-        if (board.isSolved() && !winShown && history.size() > 0) {
-            winShown = true;
+        if (board.isSolved()) {
+            if (demoMode) {
+                demoMode = false;
+                demoPath.clear();
+                demoPathIndex = 0;
+            }
+            if (!winShown) {
+                winShown = true;
+            }
         }
 
-        renderer.draw(board, history, historyPage, winShown);
+        renderer.draw(board, winShown);
 
         if (demoMode) {
             if (!demoStep()) {}

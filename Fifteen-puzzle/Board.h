@@ -13,7 +13,6 @@ const int BOARD_SIZE = 4;
 class Board {
 public:
     Board();
-    void print() const;
     bool isSolved() const;
 
     bool move(int key);

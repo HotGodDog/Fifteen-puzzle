@@ -11,21 +11,6 @@ Board::Board() {
     blankC = BOARD_SIZE - 1;
 }
 
-void Board::print() const {
-    for (int row = 0; row < BOARD_SIZE; ++row) {
-        for (int col = 0; col < BOARD_SIZE; ++col) {
-            if (tiles[row][col] == 0) {
-                cout << "   _";
-            }
-            else {
-                if (tiles[row][col] < 10) cout << " ";
-                cout << " " << tiles[row][col];
-            }
-        }
-        cout << endl;
-    }
-}
-
 bool Board::isSolved() const {
     for (int row = 0; row < BOARD_SIZE; ++row) {
         for (int col = 0; col < BOARD_SIZE; ++col) {
