@@ -106,8 +106,9 @@ void Game::run() {
         renderer.draw(board, winShown);
 
         if (demoMode) {
-            if (!demoStep()) {}
-            Sleep(300);
+            if (demoStep()) {
+                Sleep(300);
+            }
         }
         else {
             processInput();

@@ -1,4 +1,6 @@
 ﻿#include "Game.h"
+#include <conio.h>
+#include <iostream>
 
 int main() {
     Game game;
