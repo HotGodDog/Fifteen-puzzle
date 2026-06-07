@@ -8,6 +8,8 @@ Game::Game() : demoMode(false), demoPathIndex(0), winShown(false) {
 
 void Game::newGame() {
     board.shuffle();
+    logger.write("NEW GAME");
+    logger.logBoard(board);
     demoMode = false;
     demoPath.clear();       // reset path
     demoPathIndex = 0;      // reset index
@@ -26,7 +28,24 @@ void Game::processInput() {
         case 75:    // left
         case 77:    // right
             if (!demoMode) {
-                board.move(key);
+                auto oldBlank = board.getBlank();
+                int oldR = oldBlank.first;
+                int oldC = oldBlank.second;
+
+                if (board.move(key)) {
+                    auto newBlank = board.getBlank();
+                    int newR = newBlank.first;
+                    int newC = newBlank.second;
+                    int tile = board.getTile(oldR, oldC);
+
+                    string dir;
+                    if (key == 72) dir = "UP   ";
+                    else if (key == 80) dir = "DOWN ";
+                    else if (key == 75) dir = "LEFT ";
+                    else dir = "RIGHT";
+
+                    logger.logMove("PLAYER", tile, newR, newC, oldR, oldC, dir);
+                }
             }
             break;
         }
@@ -85,7 +104,24 @@ bool Game::demoStep() {
     int dc = demoPath[demoPathIndex].second;
     demoPathIndex++;
 
+    auto oldBlank = board.getBlank();
+    int oldR = oldBlank.first;
+    int oldC = oldBlank.second;
+
     board.moveByDelta(dr, dc);
+
+    auto newBlank = board.getBlank();
+    int newR = newBlank.first;
+    int newC = newBlank.second;
+    int tile = board.getTile(oldR, oldC);
+
+    string dir;
+    if (dr == -1) dir = "UP   ";
+    else if (dr == 1) dir = "DOWN ";
+    else if (dc == -1) dir = "LEFT ";
+    else dir = "RIGHT";
+
+    logger.logMove("AUTO", tile, newR, newC, oldR, oldC, dir);
 
     return true;
 }
@@ -100,6 +136,7 @@ void Game::run() {
             }
             if (!winShown) {
                 winShown = true;
+                logger.write("YOU WIN");
             }
         }
 

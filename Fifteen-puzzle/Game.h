@@ -3,6 +3,7 @@
 #include "Board.h"
 #include "Renderer.h"
 #include "Solver.h"
+#include "Logger.h"
 
 class Game {
 public:
@@ -13,6 +14,7 @@ private:
     Board board;
     Renderer renderer;
     Solver solver;
+    Logger logger;
     bool demoMode;
     bool winShown;
     vector<pair<int, int>> demoPath;

@@ -1,0 +1,65 @@
+NEW GAME
+Board state:
+5	6	 .	1	
+7	8	2	10	
+4	9	3	12	
+13	15	11	14	
+PLAYER: move LEFT  | tile 6 from [0,1] to [0,2]
+PLAYER: move RIGHT | tile 6 from [0,2] to [0,1]
+PLAYER: move DOWN  | tile 2 from [1,2] to [0,2]
+PLAYER: move DOWN  | tile 3 from [2,2] to [1,2]
+PLAYER: move UP    | tile 3 from [1,2] to [2,2]
+PLAYER: move UP    | tile 2 from [0,2] to [1,2]
+PLAYER: move RIGHT | tile 1 from [0,3] to [0,2]
+PLAYER: move DOWN  | tile 10 from [1,3] to [0,3]
+AUTO: move LEFT  | tile 2 from [1,2] to [1,3]
+AUTO: move LEFT  | tile 8 from [1,1] to [1,2]
+AUTO: move UP    | tile 6 from [0,1] to [1,1]
+AUTO: move LEFT  | tile 5 from [0,0] to [0,1]
+AUTO: move DOWN  | tile 7 from [1,0] to [0,0]
+AUTO: move DOWN  | tile 4 from [2,0] to [1,0]
+AUTO: move RIGHT | tile 9 from [2,1] to [2,0]
+AUTO: move UP    | tile 6 from [1,1] to [2,1]
+AUTO: move LEFT  | tile 4 from [1,0] to [1,1]
+AUTO: move UP    | tile 7 from [0,0] to [1,0]
+AUTO: move RIGHT | tile 5 from [0,1] to [0,0]
+AUTO: move RIGHT | tile 1 from [0,2] to [0,1]
+AUTO: move DOWN  | tile 8 from [1,2] to [0,2]
+AUTO: move RIGHT | tile 2 from [1,3] to [1,2]
+AUTO: move UP    | tile 10 from [0,3] to [1,3]
+AUTO: move LEFT  | tile 8 from [0,2] to [0,3]
+AUTO: move DOWN  | tile 2 from [1,2] to [0,2]
+AUTO: move LEFT  | tile 4 from [1,1] to [1,2]
+AUTO: move LEFT  | tile 7 from [1,0] to [1,1]
+AUTO: move UP    | tile 5 from [0,0] to [1,0]
+AUTO: move RIGHT | tile 1 from [0,1] to [0,0]
+AUTO: move RIGHT | tile 2 from [0,2] to [0,1]
+AUTO: move DOWN  | tile 4 from [1,2] to [0,2]
+AUTO: move DOWN  | tile 3 from [2,2] to [1,2]
+AUTO: move RIGHT | tile 12 from [2,3] to [2,2]
+AUTO: move DOWN  | tile 14 from [3,3] to [2,3]
+AUTO: move LEFT  | tile 11 from [3,2] to [3,3]
+AUTO: move UP    | tile 12 from [2,2] to [3,2]
+AUTO: move RIGHT | tile 14 from [2,3] to [2,2]
+AUTO: move UP    | tile 10 from [1,3] to [2,3]
+AUTO: move UP    | tile 8 from [0,3] to [1,3]
+AUTO: move LEFT  | tile 4 from [0,2] to [0,3]
+AUTO: move DOWN  | tile 3 from [1,2] to [0,2]
+AUTO: move LEFT  | tile 7 from [1,1] to [1,2]
+AUTO: move DOWN  | tile 6 from [2,1] to [1,1]
+AUTO: move RIGHT | tile 14 from [2,2] to [2,1]
+AUTO: move RIGHT | tile 10 from [2,3] to [2,2]
+AUTO: move DOWN  | tile 11 from [3,3] to [2,3]
+AUTO: move LEFT  | tile 12 from [3,2] to [3,3]
+AUTO: move LEFT  | tile 15 from [3,1] to [3,2]
+AUTO: move UP    | tile 14 from [2,1] to [3,1]
+AUTO: move RIGHT | tile 10 from [2,2] to [2,1]
+AUTO: move RIGHT | tile 11 from [2,3] to [2,2]
+AUTO: move DOWN  | tile 12 from [3,3] to [2,3]
+YOU WIN
+NEW GAME
+Board state:
+ .	7	8	14	
+11	2	12	15	
+3	1	6	13	
+9	4	10	5	
